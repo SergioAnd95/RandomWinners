@@ -1,0 +1,14 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# DB files
+*.sqlite3
+db.*
+
+# Media files
+media/
+
+# IDE settings
+.idea/
+.vscode/
