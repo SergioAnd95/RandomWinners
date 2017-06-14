@@ -12,3 +12,6 @@ media/
 # IDE settings
 .idea/
 .vscode/
+
+# local settings files
+local_settings.py
