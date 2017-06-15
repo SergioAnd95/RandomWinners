@@ -1,0 +1,1 @@
+web: gunicorn random_winners.wsgi --log-file -
