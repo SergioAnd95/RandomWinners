@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # third-party apps
+    'widget_tweaks',
 
     # own apps
     'candidates',
@@ -52,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'candidates.middleware.GroupCandidatesMiddleware',
 ]
 
 ROOT_URLCONF = 'random_winners' \
@@ -136,6 +138,7 @@ MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media')
 
 
 COUNT_OF_WINNERS = 3
+GROUP_COOKIE_LIFETIME = 365 * 24 * 60 * 60
 
 try:
     from .local_settings import *
