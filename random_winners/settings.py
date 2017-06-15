@@ -37,7 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'random_winners.apps.RandomWinnersConfig',
+
+    # third-party apps
+
+    # own apps
+    'candidates',
 ]
 
 MIDDLEWARE = [
@@ -50,7 +54,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'RandomWinners.urls'
+ROOT_URLCONF = 'random_winners' \
+               '.urls'
 
 TEMPLATES = [
     {
@@ -121,13 +126,16 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static')
-STATICFILES_DIRS = (
+STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
-)
+]
 
 # Media files
 MDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media')
+
+
+COUNT_OF_WINNERS = 3
 
 try:
     from .local_settings import *
