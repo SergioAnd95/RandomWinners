@@ -1,0 +1,30 @@
+{% if request.group_candidates.candidates.all  %}
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th></th>
+        <th>
+            Имя
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+
+    <tbody>
+    {% for candidate in request.group_candidates.candidates.all %}
+        <tr>
+            <td>{% if candidate.is_winner %}<span class="glyphicon glyphicon-fire" aria-hidden="true"></span>{% endif %}</td>
+            <td>{{ candidate.name }}</td>
+            <td>
+                <form method="post" action="{% url 'remove_candidate' candidate.pk %}">
+                    {% csrf_token %}
+                    <button class="delete_btn btn btn-danger">Удалить</button>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+    <h4> Вы пока не добавили имена, для того что б определить победитеоей пожалуйста добавьте имена в форме ниже </h4>
+{% endif %}

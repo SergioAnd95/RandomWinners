@@ -1,0 +1,123 @@
+{% load staticfiles %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Winner Choice{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+<body>
+
+{% block content %}
+
+    <div class="container">
+        <div class="col-xs-12 col-sm-6">
+            <div id="names_table">
+                {% include '_table_data.html' %}
+            </div>
+            <form action="{% url 'create_name' %}" method="POST">
+                <div class="form-group">
+                    {{ form.name.label_tag }}
+                    {% render_field form.name class+='form-control' %}
+                </div>
+                {% csrf_token %}
+                <button id="add_name_btn" class="btn btn-default">Добавить</button>
+            </form>
+        </div>
+        <div class="col-xs-12 col-sm-6">
+            <div>
+                <h4>Определить победителей</h4>
+                <form style="display: inline-block;" method="post" action="{% url 'get_winners' %}">
+                    {% csrf_token %}
+                    <button id="get_winners_btn" class="btn btn-default">Определить</button>
+                </form>
+                <form style="display: inline-block;" method="post" action="{% url 'refresh_winners' %}">
+                    {% csrf_token %}
+                    <button id="refresh_winners_btn" class="btn btn-default">Обновить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var on_delete_name = function (e) {
+                e.preventDefault();
+                $form = $(this).parent();
+                $line = $form.parents('tr');
+                var url = $form.attr('action');
+                var method = $form.attr('method');
+                $.ajax({
+                    url: url,
+                    method: method,
+                    data: $form.serialize(),
+                    success: function (data) {
+                        $line.remove();
+                    },
+                    error: function (textStatus) {
+                        if (textStatus.status == 404) {
+                            alert("Вы не можете удалить запись, так как ее не существует!");
+                        }
+                    }
+                });
+            };
+
+            $(".delete_btn").on("click", on_delete_name);
+
+
+
+            $("#get_winners_btn, #refresh_winners_btn").on("click", function (e) {
+                e.preventDefault();
+                $form = $(this).parent();
+                var url = $form.attr('action');
+                var method = $form.attr('method');
+                $.ajax({
+                    url: url,
+                    method: method,
+                    data: $form.serialize(),
+                    success: function (data) {
+                        $("#names_table").html(data);
+                        $(".delete_btn").on("click", on_delete_name);
+                    },
+                    error: function (textStatus) {
+                        alert(textStatus.responseText);
+                    }
+                })
+            });
+
+            $("#add_name_btn").on("click", function (e) {
+                e.preventDefault();
+                $form = $(this).parent();
+                var url = $form.attr('action');
+                var method = $form.attr('method');
+                $(".has_error").removeClass('has_error');
+                $.ajax({
+                    url: url,
+                    method: method,
+                    data: $form.serialize(),
+                    success: function (data) {
+                        $("#names_table").html(data);
+                        $(".delete_btn").on("click", on_delete_name);
+                    },
+                    error: function (textStatus) {
+                        if(textStatus.status == 404){
+                            var errors = $.parseJSON(textStatus.responseText);
+                            console.log(errors);
+                            for(field in errors){
+                                $form.find("#id_"+field).parent().addClass('has-error');
+                            }
+                        }
+                        else {
+                            alert(textStatus.responseText);
+                        }
+                    }
+                })
+            });
+        })
+    </script>
+</body>
+</html>
