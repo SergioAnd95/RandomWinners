@@ -50,7 +50,7 @@ class GroupCandidates(models.Model):
         not_winners = self.candidates.filter(is_winner=False)
 
         if not_winners.count() < count:
-            raise ValueError
+            raise ValueError('Count of candidates must be equal or higher then count of candidates')
 
         while count:
             winner = random.choice(not_winners)
