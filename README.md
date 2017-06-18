@@ -31,6 +31,7 @@ Creaete virtualenvironmet and activate(not required):
 
 ### Tests
 if you want to run tests, you can do this with this command:
+
 `./manage.py test`
 
 ### Create superuser
